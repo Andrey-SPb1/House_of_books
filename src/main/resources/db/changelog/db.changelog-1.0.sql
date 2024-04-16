@@ -12,21 +12,14 @@ CREATE TABLE IF NOT EXISTS users
 );
 
 --changeset andrey:2
-CREATE TABLE IF NOT EXISTS payment
-(
-    id          BIGSERIAL PRIMARY KEY,
-    amount      INT    NOT NULL,
-    receiver_id BIGINT NOT NULL REFERENCES users (id)
-);
-
---changeset andrey:3
 CREATE TABLE IF NOT EXISTS books
 (
     id              BIGSERIAL PRIMARY KEY,
     name            VARCHAR(64) NOT NULL,
-    image           VARCHAR(64) ,
+    image           VARCHAR(64),
     author          VARCHAR(64) NOT NULL,
     genre           VARCHAR(32) NOT NULL,
+    description     VARCHAR(255),
     year_of_publish INT         NOT NULL,
     pages           INT         NOT NULL,
     price_paper     INT         NOT NULL,
