@@ -28,4 +28,9 @@ public class BookReview implements BaseEntity<Long> {
 
     @Column(nullable = false)
     private String review;
+
+    void setBook(Book book) {
+        this.book = book;
+        this.book.getBookReviews().add(this);
+    }
 }

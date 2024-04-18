@@ -39,7 +39,7 @@ public class User implements BaseEntity<Long>{
 
     @Default
     @OneToMany(mappedBy = "user")
-    private List<BookInBasket> booksInBaskets = new ArrayList<>();
+    private List<BookInBasket> booksInBasket = new ArrayList<>();
 
     @Default
     @OneToMany(mappedBy = "user")

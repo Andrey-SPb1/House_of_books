@@ -25,4 +25,9 @@ public class BookInFavorites implements BaseEntity<Integer> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
+
+    void setUser(User user) {
+        this.user = user;
+        this.user.getBooksInFavorites().add(this);
+    }
 }

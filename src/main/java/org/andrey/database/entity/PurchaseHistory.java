@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "purchase_history")
-public class PurchaseHistory implements BaseEntity<Long> {
+public class PurchaseHistory implements BaseEntity<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false)
     private Integer amount;
@@ -28,5 +28,10 @@ public class PurchaseHistory implements BaseEntity<Long> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
+
+    void setUser(User user) {
+        this.user = user;
+        this.user.getPurchaseHistories().add(this);
+    }
 
 }
