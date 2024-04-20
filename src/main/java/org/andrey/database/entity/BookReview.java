@@ -31,6 +31,6 @@ public class BookReview implements BaseEntity<Long> {
 
     void setBook(Book book) {
         this.book = book;
-        this.book.getBookReviews().add(this);
+        this.book.getReviews().add(this);
     }
 }

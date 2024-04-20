@@ -51,6 +51,6 @@ public class Book implements BaseEntity<Long> {
 
     @Builder.Default
     @OneToMany(mappedBy = "book")
-    private List<BookReview> bookReviews = new ArrayList<>();
+    private List<BookReview> reviews = new ArrayList<>();
 
 }
