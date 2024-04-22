@@ -15,6 +15,14 @@ class UserRepositoryTest extends IntegrationTestBase {
     private final UserRepository userRepository;
 
     @Test
+    void checkAudit() {
+        User user = userRepository.findById(1L).get();
+        user.setBirthDate(user.getBirthDate().plusYears(1));
+        userRepository.flush();
+        assertEquals("Andrey", user.getModifiedBy());
+    }
+
+    @Test
     void checkTest() {
         List<User> users = userRepository.findAll();
         String firstname = users.get(0).getFirstname();
