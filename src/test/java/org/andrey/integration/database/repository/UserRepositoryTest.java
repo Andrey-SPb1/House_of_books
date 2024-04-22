@@ -5,6 +5,8 @@ import org.andrey.integration.service.IntegrationTestBase;
 import org.andrey.database.entity.User;
 import org.andrey.database.repository.UserRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.Commit;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,6 +17,7 @@ class UserRepositoryTest extends IntegrationTestBase {
     private final UserRepository userRepository;
 
     @Test
+    @Commit // check envers in debug
     void checkAudit() {
         User user = userRepository.findById(1L).get();
         user.setBirthDate(user.getBirthDate().plusYears(1));

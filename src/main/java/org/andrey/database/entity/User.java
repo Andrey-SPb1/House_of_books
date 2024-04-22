@@ -3,6 +3,9 @@ package org.andrey.database.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.Builder.Default;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "users")
+@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class User extends AuditingEntity<Long> {
 
     @Id
@@ -34,14 +38,17 @@ public class User extends AuditingEntity<Long> {
 
     private String password;
 
+    @NotAudited
     @Default
     @OneToMany(mappedBy = "user")
     private List<BookInFavorites> booksInFavorites = new ArrayList<>();
 
+    @NotAudited
     @Default
     @OneToMany(mappedBy = "user")
     private List<BookInBasket> booksInBasket = new ArrayList<>();
 
+    @NotAudited
     @Default
     @OneToMany(mappedBy = "user")
     private List<PurchaseHistory> purchaseHistories = new ArrayList<>();
