@@ -1,11 +1,12 @@
 package org.andrey.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.andrey.dto.filter.BookFilter;
 import org.andrey.dto.BookInMainReadDto;
 import org.andrey.service.BookService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,9 +17,9 @@ public class MainController {
 
     private final BookService bookService;
 
-    @GetMapping
-    public List<BookInMainReadDto> findAllBooks() {
-        return bookService.findAllForMain();
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<BookInMainReadDto> findAllBooks(BookFilter bookFilter, Pageable pageable) {
+        return bookService.findAllByFilter(bookFilter, pageable);
     }
 
 }

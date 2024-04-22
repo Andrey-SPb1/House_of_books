@@ -22,7 +22,6 @@ dependencies {
     implementation 'org.postgresql:postgresql'
     implementation 'org.liquibase:liquibase-core'
 
-
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.testcontainers:postgresql:${versions.testcontainers}"
 }
@@ -32,5 +31,5 @@ test {
 }
 
 wrapper {
-    gradleVersion '7.6'
+    gradleVersion '8.6'
 }
