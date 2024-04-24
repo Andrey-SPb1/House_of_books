@@ -1,6 +1,7 @@
 package org.andrey.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.andrey.dto.create.UserCreateEditDto;
 import org.andrey.dto.read.BasketReadDto;
 import org.andrey.dto.read.FavoritesReadDto;
 import org.andrey.dto.read.PurchaseHistoryReadDto;
@@ -10,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -30,6 +28,14 @@ public class UserController {
         return userService.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
+
+    @PutMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserReadDto create(UserCreateEditDto user) {
+        return userService.create(user);
+    }
+
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")

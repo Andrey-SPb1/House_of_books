@@ -3,10 +3,12 @@ package org.andrey.service;
 import lombok.RequiredArgsConstructor;
 import org.andrey.database.entity.User;
 import org.andrey.database.repository.UserRepository;
+import org.andrey.dto.create.UserCreateEditDto;
 import org.andrey.dto.read.BasketReadDto;
 import org.andrey.dto.read.FavoritesReadDto;
 import org.andrey.dto.read.PurchaseHistoryReadDto;
 import org.andrey.dto.read.UserReadDto;
+import org.andrey.mapper.create.UserCreateEditMapper;
 import org.andrey.mapper.read.BasketReadMapper;
 import org.andrey.mapper.read.FavoritesReadMapper;
 import org.andrey.mapper.read.PurchaseHistoryReadMapper;
@@ -26,6 +28,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserReadMapper userReadMapper;
+    private final UserCreateEditMapper userCreateEditMapper;
     private final BasketReadMapper basketReadMapper;
     private final FavoritesReadMapper favoritesReadMapper;
     private final PurchaseHistoryReadMapper purchaseHistoryReadMapper;
@@ -33,6 +36,14 @@ public class UserService implements UserDetailsService {
     public Optional<UserReadDto> findById(Long id) {
         return userRepository.findById(id)
                 .map(userReadMapper::map);
+    }
+
+    public UserReadDto create(UserCreateEditDto user) {
+        return Optional.of(user)
+                .map(userCreateEditMapper::map)
+                .map(userRepository::save)
+                .map(userReadMapper::map)
+                .orElseThrow();
     }
 
     public Optional<UserReadDto> findByEmail(String email) {
