@@ -1,7 +1,8 @@
-package org.andrey.mapper;
+package org.andrey.mapper.read;
 
 import org.andrey.database.entity.PurchaseHistory;
-import org.andrey.dto.PurchaseHistoryReadDto;
+import org.andrey.dto.read.PurchaseHistoryReadDto;
+import org.andrey.mapper.Mapper;
 import org.springframework.stereotype.Component;
 
 @Component

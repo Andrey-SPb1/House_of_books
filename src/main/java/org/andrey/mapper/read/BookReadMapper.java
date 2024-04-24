@@ -1,8 +1,9 @@
-package org.andrey.mapper;
+package org.andrey.mapper.read;
 
 import lombok.RequiredArgsConstructor;
 import org.andrey.database.entity.Book;
-import org.andrey.dto.BookReadDto;
+import org.andrey.dto.read.BookReadDto;
+import org.andrey.mapper.Mapper;
 import org.springframework.stereotype.Component;
 
 @Component

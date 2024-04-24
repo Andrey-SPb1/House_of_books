@@ -2,7 +2,7 @@ package org.andrey.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.andrey.dto.filter.BookFilter;
-import org.andrey.dto.BookInMainReadDto;
+import org.andrey.dto.read.BookInMainReadDto;
 import org.andrey.service.BookService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;

@@ -3,22 +3,26 @@ package org.andrey.service;
 import lombok.RequiredArgsConstructor;
 import org.andrey.database.entity.User;
 import org.andrey.database.repository.UserRepository;
-import org.andrey.dto.BasketReadDto;
-import org.andrey.dto.FavoritesReadDto;
-import org.andrey.dto.PurchaseHistoryReadDto;
-import org.andrey.dto.UserReadDto;
-import org.andrey.mapper.BasketReadMapper;
-import org.andrey.mapper.FavoritesReadMapper;
-import org.andrey.mapper.PurchaseHistoryReadMapper;
-import org.andrey.mapper.UserReadMapper;
+import org.andrey.dto.read.BasketReadDto;
+import org.andrey.dto.read.FavoritesReadDto;
+import org.andrey.dto.read.PurchaseHistoryReadDto;
+import org.andrey.dto.read.UserReadDto;
+import org.andrey.mapper.read.BasketReadMapper;
+import org.andrey.mapper.read.FavoritesReadMapper;
+import org.andrey.mapper.read.PurchaseHistoryReadMapper;
+import org.andrey.mapper.read.UserReadMapper;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserReadMapper userReadMapper;
@@ -28,6 +32,11 @@ public class UserService {
 
     public Optional<UserReadDto> findById(Long id) {
         return userRepository.findById(id)
+                .map(userReadMapper::map);
+    }
+
+    public Optional<UserReadDto> findByEmail(String email) {
+        return userRepository.findByEmail(email)
                 .map(userReadMapper::map);
     }
 
@@ -58,4 +67,15 @@ public class UserService {
                 .orElse(null);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByEmail(username)
+                .map(user -> new org.springframework.security.core.userdetails.User(
+                        user.getEmail(),
+                        user.getPassword(),
+                        Collections.singleton(user.getRole())
+                        )
+                )
+                .orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve user: " + username));
+    }
 }

@@ -1,4 +1,4 @@
-package org.andrey.dto;
+package org.andrey.dto.read;
 
 import lombok.Value;
 

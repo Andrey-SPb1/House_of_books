@@ -1,7 +1,8 @@
-package org.andrey.mapper;
+package org.andrey.mapper.read;
 
 import org.andrey.database.entity.BookReview;
-import org.andrey.dto.BookReviewReadDto;
+import org.andrey.dto.read.BookReviewReadDto;
+import org.andrey.mapper.Mapper;
 import org.springframework.stereotype.Component;
 
 @Component

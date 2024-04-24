@@ -1,7 +1,8 @@
-package org.andrey.mapper;
+package org.andrey.mapper.read;
 
 import org.andrey.database.entity.BookInFavorites;
-import org.andrey.dto.FavoritesReadDto;
+import org.andrey.dto.read.FavoritesReadDto;
+import org.andrey.mapper.Mapper;
 import org.springframework.stereotype.Component;
 
 @Component

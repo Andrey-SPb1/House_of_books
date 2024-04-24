@@ -1,12 +1,15 @@
 package org.andrey.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.andrey.dto.BasketReadDto;
-import org.andrey.dto.FavoritesReadDto;
-import org.andrey.dto.PurchaseHistoryReadDto;
-import org.andrey.dto.UserReadDto;
+import org.andrey.dto.read.BasketReadDto;
+import org.andrey.dto.read.FavoritesReadDto;
+import org.andrey.dto.read.PurchaseHistoryReadDto;
+import org.andrey.dto.read.UserReadDto;
 import org.andrey.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +25,14 @@ public class UserController {
 
     private final UserService userService;
 
+    @GetMapping
+    public UserReadDto findByEmail(@AuthenticationPrincipal UserDetails userDetails) {
+        return userService.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public UserReadDto findById(@PathVariable Long id) {
         return userService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
