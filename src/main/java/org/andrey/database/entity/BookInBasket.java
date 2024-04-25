@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "books_in_basket")
-public class BookInBasket extends AuditingEntity<Integer> {
+public class BookInBasket implements BaseEntity<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +24,4 @@ public class BookInBasket extends AuditingEntity<Integer> {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    void setUser(User user) {
-        this.user = user;
-        this.user.getBooksInBasket().add(this);
-    }
 }

@@ -8,5 +8,4 @@ public class BasketReadDto {
     String bookImage;
     String bookName;
     String bookAuthor;
-
 }

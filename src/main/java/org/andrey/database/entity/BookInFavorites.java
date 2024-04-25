@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "books_in_favorites")
-public class BookInFavorites extends AuditingEntity<Integer> {
+public class BookInFavorites implements BaseEntity<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +24,4 @@ public class BookInFavorites extends AuditingEntity<Integer> {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    void setUser(User user) {
-        this.user = user;
-        this.user.getBooksInFavorites().add(this);
-    }
 }

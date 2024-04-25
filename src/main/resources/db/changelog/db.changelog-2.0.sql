@@ -38,29 +38,3 @@ ALTER TABLE books_reviews
 
 ALTER TABLE books_reviews
     ADD COLUMN modified_by VARCHAR(32);
-
---changeset andrey:4
-ALTER TABLE books_in_favorites
-    ADD COLUMN created_at TIMESTAMP;
-
-ALTER TABLE books_in_favorites
-    ADD COLUMN modified_at TIMESTAMP;
-
-ALTER TABLE books_in_favorites
-    ADD COLUMN created_by VARCHAR(32);
-
-ALTER TABLE books_in_favorites
-    ADD COLUMN modified_by VARCHAR(32);
-
---changeset andrey:5
-ALTER TABLE books_in_basket
-    ADD COLUMN created_at TIMESTAMP;
-
-ALTER TABLE books_in_basket
-    ADD COLUMN modified_at TIMESTAMP;
-
-ALTER TABLE books_in_basket
-    ADD COLUMN created_by VARCHAR(32);
-
-ALTER TABLE books_in_basket
-    ADD COLUMN modified_by VARCHAR(32);
