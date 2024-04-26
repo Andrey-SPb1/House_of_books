@@ -6,8 +6,11 @@ import org.andrey.dto.read.BasketReadDto;
 import org.andrey.dto.read.FavoritesReadDto;
 import org.andrey.dto.read.PurchaseHistoryReadDto;
 import org.andrey.dto.read.UserReadDto;
+import org.andrey.service.PurchaseHistoryService;
 import org.andrey.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +25,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final PurchaseHistoryService purchaseHistoryService;
 
     @GetMapping
     public UserReadDto findByEmail(@AuthenticationPrincipal UserDetails userDetails) {
@@ -29,13 +33,20 @@ public class UserController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public UserReadDto create(UserCreateEditDto user) {
         return userService.create(user);
     }
 
+
+    @PutMapping("/basket/buy")
+    public ResponseEntity<String> buyBooks(@AuthenticationPrincipal UserDetails userDetails) {
+        return purchaseHistoryService.addPurchase(userDetails.getUsername()) ?
+                new ResponseEntity<>(HttpStatus.OK) :
+                new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -44,19 +55,18 @@ public class UserController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/{id}/basket")
-    public List<BasketReadDto> findUsersBasket(@PathVariable Long id) {
-        userService.getBasketById(id);
-        return userService.getBasketById(id);
+    @GetMapping("/basket")
+    public List<BasketReadDto> findUsersBasket(@AuthenticationPrincipal UserDetails userDetails) {
+        return userService.getBasketByEmail(userDetails.getUsername());
     }
 
-    @GetMapping("/{id}/favorites")
-    public List<FavoritesReadDto> findUsersFavorites(@PathVariable Long id) {
-        return userService.getFavoritesById(id);
+    @GetMapping("/favorites")
+    public List<FavoritesReadDto> findUsersFavorites(@AuthenticationPrincipal UserDetails userDetails) {
+        return userService.getFavoritesByEmail(userDetails.getUsername());
     }
 
-    @GetMapping("/{id}/purchase-history")
-    public List<PurchaseHistoryReadDto> findUsersPurchaseHistory(@PathVariable Long id) {
-        return userService.getPurchaseHistoryById(id);
+    @GetMapping("/purchase-history")
+    public List<PurchaseHistoryReadDto> findUsersPurchaseHistory(@AuthenticationPrincipal UserDetails userDetails) {
+        return userService.getPurchaseHistoryByEmail(userDetails.getUsername());
     }
 }

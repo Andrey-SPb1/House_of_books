@@ -3,6 +3,7 @@ package org.andrey.controller;
 import lombok.RequiredArgsConstructor;
 import org.andrey.dto.create.BookCreateEditDto;
 import org.andrey.dto.read.BookReadDto;
+import org.andrey.service.BookReviewService;
 import org.andrey.service.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class BookController {
 
     private final BookService bookService;
+    private final BookReviewService bookReviewService;
 
     @GetMapping("/{id}")
     public BookReadDto findById(@PathVariable Long id) {
@@ -41,6 +43,14 @@ public class BookController {
         return bookService.changeBasket(id, userDetails.getUsername()) ?
                 new ResponseEntity<>(HttpStatus.OK) :
                 new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @PostMapping("/{id}/review")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addReview(@PathVariable Long id,
+                          @AuthenticationPrincipal UserDetails userDetails,
+                          String review) {
+        bookReviewService.addReview(id, userDetails.getUsername(), review);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

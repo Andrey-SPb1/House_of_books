@@ -27,9 +27,4 @@ public class PurchaseHistory extends AuditingEntity<Integer> {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    void setUser(User user) {
-        this.user = user;
-        this.user.getPurchaseHistories().add(this);
-    }
-
 }

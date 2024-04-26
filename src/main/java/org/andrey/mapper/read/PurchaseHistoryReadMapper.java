@@ -12,7 +12,11 @@ public class PurchaseHistoryReadMapper implements Mapper<PurchaseHistory, Purcha
         return new PurchaseHistoryReadDto(
                 object.getAmount(),
                 object.getBook().getImage(),
-                object.getBook().getName()
+                object.getBook().getName(),
+                object.getCreatedBy(),
+                object.getCreatedAt(),
+                object.getModifiedBy(),
+                object.getModifiedAt()
         );
     }
 }

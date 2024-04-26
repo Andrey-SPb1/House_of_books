@@ -4,12 +4,12 @@ import org.andrey.database.entity.BookInFavorites;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Component
+@Repository
 public interface BookInFavoritesRepository extends JpaRepository<BookInFavorites, Integer> {
 
     @Query("select bf from BookInFavorites bf " +

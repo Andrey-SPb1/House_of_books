@@ -12,7 +12,11 @@ public class BookReviewMapper implements Mapper<BookReview, BookReviewReadDto> {
         return new BookReviewReadDto(
                 object.getUser().getFirstname(),
                 object.getUser().getLastname(),
-                object.getReview()
+                object.getReview(),
+                object.getCreatedBy(),
+                object.getCreatedAt(),
+                object.getModifiedBy(),
+                object.getModifiedAt()
         );
     }
 }

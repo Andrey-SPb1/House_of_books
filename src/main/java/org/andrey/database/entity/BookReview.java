@@ -27,8 +27,4 @@ public class BookReview extends AuditingEntity<Long> {
     @Column(nullable = false)
     private String review;
 
-    void setBook(Book book) {
-        this.book = book;
-        this.book.getReviews().add(this);
-    }
 }

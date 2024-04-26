@@ -1,7 +1,6 @@
 package org.andrey.service;
 
 import lombok.RequiredArgsConstructor;
-import org.andrey.database.entity.User;
 import org.andrey.database.repository.BookInBasketRepository;
 import org.andrey.database.repository.BookInFavoritesRepository;
 import org.andrey.database.repository.BookRepository;
@@ -33,10 +32,8 @@ public class BookService {
     private final BookCreateEditMapper bookCreateEditMapper;
 
     public boolean changeFavorites(Long bookId, String email) {
-        User user = userRepository.findByEmail(email)
+        Long userId = userRepository.getIdByEmail(email)
                 .orElseThrow();
-        Long userId = user.getId();
-
         int result = bookInFavoritesRepository.findByUserIdAndBookId(userId, bookId).isPresent() ?
                 bookInFavoritesRepository.deleteByUserIdAndBookId(userId, bookId) :
                 bookInFavoritesRepository.addByUserIdAndBookId(userId, bookId);
@@ -45,10 +42,8 @@ public class BookService {
     }
 
     public boolean changeBasket(Long bookId, String email) {
-        User user = userRepository.findByEmail(email)
+        Long userId = userRepository.getIdByEmail(email)
                 .orElseThrow();
-        Long userId = user.getId();
-
         int result = bookInBasketRepository.findByUserIdAndBookId(userId, bookId).isPresent() ?
                 bookInBasketRepository.deleteByUserIdAndBookId(userId, bookId) :
                 bookInBasketRepository.addByUserIdAndBookId(userId, bookId);

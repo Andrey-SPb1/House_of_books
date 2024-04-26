@@ -51,8 +51,8 @@ public class UserService implements UserDetailsService {
                 .orElseThrow();
     }
 
-    public List<BasketReadDto> getBasketById(Long id) {
-        return userRepository.findById(id)
+    public List<BasketReadDto> getBasketByEmail(String email) {
+        return userRepository.findByEmail(email)
                 .map(User::getBooksInBasket)
                 .map(basket -> basket.stream()
                         .map(basketReadMapper::map)
@@ -60,8 +60,8 @@ public class UserService implements UserDetailsService {
                 .orElse(null);
     }
 
-    public List<FavoritesReadDto> getFavoritesById(Long id) {
-        return userRepository.findById(id)
+    public List<FavoritesReadDto> getFavoritesByEmail(String email) {
+        return userRepository.findByEmail(email)
                 .map(User::getBooksInFavorites)
                 .map(favorites -> favorites.stream()
                         .map(favoritesReadMapper::map)
@@ -69,8 +69,8 @@ public class UserService implements UserDetailsService {
                 .orElse(null);
     }
 
-    public List<PurchaseHistoryReadDto> getPurchaseHistoryById(Long id) {
-        return userRepository.findById(id)
+    public List<PurchaseHistoryReadDto> getPurchaseHistoryByEmail(String email) {
+        return userRepository.findByEmail(email)
                 .map(User::getPurchaseHistories)
                 .map(purchaseHistory -> purchaseHistory.stream()
                         .map(purchaseHistoryReadMapper::map)
