@@ -17,6 +17,8 @@ public class BookReadDto {
     Integer pricePaper;
     Integer priceDigital;
     Integer inStock;
+    Boolean isInFavorites;
+    Boolean isInBasket;
     List<BookReviewReadDto> reviews;
 
 }

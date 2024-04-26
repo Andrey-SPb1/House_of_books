@@ -43,9 +43,7 @@ public class UserController {
 
     @PutMapping("/basket/buy")
     public ResponseEntity<String> buyBooks(@AuthenticationPrincipal UserDetails userDetails) {
-        return purchaseHistoryService.addPurchase(userDetails.getUsername()) ?
-                new ResponseEntity<>(HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return purchaseHistoryService.addPurchaseHistoryFromBasket(userDetails.getUsername());
     }
 
     @GetMapping("/{id}")

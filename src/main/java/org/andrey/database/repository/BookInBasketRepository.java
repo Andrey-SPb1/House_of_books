@@ -1,12 +1,10 @@
 package org.andrey.database.repository;
 
 import org.andrey.database.entity.BookInBasket;
-import org.andrey.database.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -21,17 +19,11 @@ public interface BookInBasketRepository extends JpaRepository<BookInBasket, Inte
     @Modifying
     @Query(value = "insert into books_in_basket(user_id, book_id) " +
             "values (:userId, :bookId) ", nativeQuery = true)
-    @Transactional
     int addByUserIdAndBookId(Long userId, Long bookId);
 
     @Modifying
     @Query(value = "delete from books_in_basket " +
             "where user_id = :userId and book_id = :bookId ", nativeQuery = true)
-    @Transactional
     int deleteByUserIdAndBookId(Long userId, Long bookId);
-
-    @Modifying
-    @Transactional
-    int deleteByUser(User user);
 
 }

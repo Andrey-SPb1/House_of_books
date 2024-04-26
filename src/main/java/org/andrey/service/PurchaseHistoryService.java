@@ -1,13 +1,15 @@
 package org.andrey.service;
 
 import lombok.RequiredArgsConstructor;
-import org.andrey.database.entity.PurchaseHistory;
-import org.andrey.database.entity.User;
+import org.andrey.database.entity.BookInBasket;
 import org.andrey.database.repository.BookInBasketRepository;
 import org.andrey.database.repository.PurchaseHistoryRepository;
 import org.andrey.database.repository.UserRepository;
 import org.andrey.mapper.BasketToPurchaseHistoryMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,23 +22,20 @@ public class PurchaseHistoryService {
     private final BookInBasketRepository bookInBasketRepository;
     private final BasketToPurchaseHistoryMapper basketToPurchaseHistoryMapper;
 
-    public boolean addPurchase(String email) {
-        // TODO: 26.04.2024 return ResponseEntity
-        User user = userRepository.findByEmail(email)
-                .orElseThrow();
-        List<PurchaseHistory> purchaseHistoryList = user.getBooksInBasket().stream()
-                .map(basketToPurchaseHistoryMapper::map)
-                .toList();
+    @Transactional
+    public ResponseEntity<String> addPurchaseHistoryFromBasket(String email) {
+        List<BookInBasket> booksInBasket = userRepository.findByEmail(email)
+                .orElseThrow()
+                .getBooksInBasket();
 
-        if(purchaseHistoryList.size() != 0) {
-            if (bookInBasketRepository.deleteByUser(user) == purchaseHistoryList.size()) {
-                List<PurchaseHistory> savedAll = purchaseHistoryRepository.saveAll(purchaseHistoryList);
-                return purchaseHistoryList.size() == savedAll.size();
-            } else {
-                return false;
-            }
+        if (!booksInBasket.isEmpty()) {
+            purchaseHistoryRepository.saveAll(booksInBasket.stream()
+                    .map(basketToPurchaseHistoryMapper::map)
+                    .toList());
+            bookInBasketRepository.deleteAll(booksInBasket);
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return true;
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 

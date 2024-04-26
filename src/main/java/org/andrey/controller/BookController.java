@@ -23,9 +23,9 @@ public class BookController {
     private final BookReviewService bookReviewService;
 
     @GetMapping("/{id}")
-    public BookReadDto findById(@PathVariable Long id) {
-        // TODO: 24.04.2024 check favorites and basket
-        return bookService.findById(id)
+    public BookReadDto findById(@PathVariable Long id,
+                                @AuthenticationPrincipal UserDetails userDetails) {
+        return bookService.findById(id, userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 

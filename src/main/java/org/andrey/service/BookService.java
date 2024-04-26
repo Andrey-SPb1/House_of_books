@@ -1,6 +1,10 @@
 package org.andrey.service;
 
 import lombok.RequiredArgsConstructor;
+import org.andrey.database.entity.Book;
+import org.andrey.database.entity.BookInBasket;
+import org.andrey.database.entity.BookInFavorites;
+import org.andrey.database.entity.User;
 import org.andrey.database.repository.BookInBasketRepository;
 import org.andrey.database.repository.BookInFavoritesRepository;
 import org.andrey.database.repository.BookRepository;
@@ -14,6 +18,7 @@ import org.andrey.mapper.read.BookInMainReadMapper;
 import org.andrey.mapper.read.BookReadMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +36,7 @@ public class BookService {
     private final BookInMainReadMapper bookInMainReadMapper;
     private final BookCreateEditMapper bookCreateEditMapper;
 
+    @Transactional
     public boolean changeFavorites(Long bookId, String email) {
         Long userId = userRepository.getIdByEmail(email)
                 .orElseThrow();
@@ -41,6 +47,7 @@ public class BookService {
         return result == 1;
     }
 
+    @Transactional
     public boolean changeBasket(Long bookId, String email) {
         Long userId = userRepository.getIdByEmail(email)
                 .orElseThrow();
@@ -57,11 +64,16 @@ public class BookService {
                 .toList();
     }
 
-    public Optional<BookReadDto> findById(Long id) {
-        return bookRepository.findById(id)
-                .map(bookReadMapper::map);
+    public Optional<BookReadDto> findById(Long bookId, String email) {
+        User user = userRepository.findByEmail(email).orElseThrow();
+        Book book = bookRepository.findById(bookId).orElseThrow();
+        Optional<BookInFavorites> inFavorites = bookInFavoritesRepository.findByUserIdAndBookId(user.getId(), bookId);
+        Optional<BookInBasket> inBasket = bookInBasketRepository.findByUserIdAndBookId(user.getId(), bookId);
+
+        return Optional.of(bookReadMapper.map(book, inFavorites.isPresent(), inBasket.isPresent()));
     }
 
+    @Transactional
     public BookReadDto create(BookCreateEditDto book) {
         return Optional.of(book)
                 .map(bookCreateEditMapper::map)

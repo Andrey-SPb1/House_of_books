@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,6 +44,7 @@ public class UserService implements UserDetailsService {
                 .map(userReadMapper::map);
     }
 
+    @Transactional
     public UserReadDto create(UserCreateEditDto user) {
         return Optional.of(user)
                 .map(userCreateEditMapper::map)
