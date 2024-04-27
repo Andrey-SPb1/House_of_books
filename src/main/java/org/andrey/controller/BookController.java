@@ -53,7 +53,7 @@ public class BookController {
         bookReviewService.addReview(id, userDetails.getUsername(), review);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public BookReadDto create(BookCreateEditDto book) {

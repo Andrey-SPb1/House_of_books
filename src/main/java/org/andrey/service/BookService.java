@@ -1,6 +1,7 @@
 package org.andrey.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.andrey.database.entity.Book;
 import org.andrey.database.entity.BookInBasket;
 import org.andrey.database.entity.BookInFavorites;
@@ -19,6 +20,7 @@ import org.andrey.mapper.read.BookReadMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +37,7 @@ public class BookService {
     private final BookReadMapper bookReadMapper;
     private final BookInMainReadMapper bookInMainReadMapper;
     private final BookCreateEditMapper bookCreateEditMapper;
+    private final ImageService imageService;
 
     @Transactional
     public boolean changeFavorites(Long bookId, String email) {
@@ -76,10 +79,18 @@ public class BookService {
     @Transactional
     public BookReadDto create(BookCreateEditDto book) {
         return Optional.of(book)
-                .map(bookCreateEditMapper::map)
+                .map(dto -> {
+                    uploadImage(dto.getImage());
+                    return bookCreateEditMapper.map(dto);
+                })
                 .map(bookRepository::save)
                 .map(bookReadMapper::map)
                 .orElseThrow();
+    }
+
+    @SneakyThrows
+    private void uploadImage(MultipartFile image) {
+        if (!image.isEmpty()) imageService.upload(image.getOriginalFilename(), image.getInputStream());
     }
 
 }
