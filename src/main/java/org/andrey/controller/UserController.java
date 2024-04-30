@@ -1,5 +1,6 @@
 package org.andrey.controller;
 
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.andrey.dto.create.UserCreateEditDto;
 import org.andrey.dto.read.BasketReadDto;
@@ -8,12 +9,14 @@ import org.andrey.dto.read.PurchaseHistoryReadDto;
 import org.andrey.dto.read.UserReadDto;
 import org.andrey.service.PurchaseHistoryService;
 import org.andrey.service.UserService;
+import org.andrey.validation.group.Marker;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -36,10 +39,18 @@ public class UserController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserReadDto create(UserCreateEditDto user) {
+    public UserReadDto create(@Validated @RequestBody UserCreateEditDto user) {
         return userService.create(user);
     }
 
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserReadDto update(@PathVariable Long id,
+                              @Validated({Default.class, Marker.UpdateAction.class})
+                              @RequestBody
+                              UserCreateEditDto user) {
+        return userService.update(id, user)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
 
     @PutMapping("/basket/buy")
     public ResponseEntity<String> buyBooks(@AuthenticationPrincipal UserDetails userDetails) {

@@ -1,21 +1,19 @@
 package org.andrey.dto.create;
 
-import lombok.Value;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
-@Value
-public class BookCreateEditDto {
-
-    // TODO: 24.04.2024 validation
-    String name;
-    MultipartFile image;
-    String author;
-    String genre;
-    String description;
-    Integer yearOfPublish;
-    Integer pages;
-    Integer pricePaper;
-    Integer priceDigital;
-    Integer inStock;
-
+public record BookCreateEditDto(
+        @NotBlank String name,
+        MultipartFile image,
+        @NotBlank String author,
+        @NotBlank String genre,
+        @Size(max = 200) String description,
+        @NotNull Integer yearOfPublish,
+        @NotNull Integer pages,
+        @NotNull Integer pricePaper,
+        @NotNull Integer priceDigital,
+        @NotNull Integer inStock) {
 }

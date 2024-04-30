@@ -19,15 +19,28 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
     @Override
     public User map(UserCreateEditDto object) {
         return User.builder()
-                .firstname(object.getFirstname())
-                .lastname(object.getLastname())
-                .email(object.getEmail())
-                .birthDate(object.getBirthDate())
-                .role(object.getRole())
-                .password(Optional.of(object.getRawPassword())
+                .firstname(object.firstname())
+                .lastname(object.lastname())
+                .email(object.email())
+                .birthDate(object.birthDate())
+                .role(object.role())
+                .password(Optional.of(object.rawPassword())
                         .filter(StringUtils::hasText)
                         .map(passwordEncoder::encode)
-                        .orElse("123"))
+                        .orElseThrow())
                 .build();
+    }
+
+    @Override
+    public User map(UserCreateEditDto userDto, User user) {
+        user.setFirstname(userDto.firstname());
+        user.setLastname(userDto.lastname());
+        user.setEmail(userDto.email());
+        user.setPassword(Optional.of(userDto.rawPassword())
+                .filter(StringUtils::hasText)
+                .map(passwordEncoder::encode)
+                .orElseThrow());
+        user.setRole(userDto.role());
+        return user;
     }
 }

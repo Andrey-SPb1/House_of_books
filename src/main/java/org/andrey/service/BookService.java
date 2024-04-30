@@ -80,7 +80,7 @@ public class BookService {
     public BookReadDto create(BookCreateEditDto book) {
         return Optional.of(book)
                 .map(dto -> {
-                    uploadImage(dto.getImage());
+                    uploadImage(dto.image());
                     return bookCreateEditMapper.map(dto);
                 })
                 .map(bookRepository::save)
@@ -90,7 +90,7 @@ public class BookService {
 
     @SneakyThrows
     private void uploadImage(MultipartFile image) {
-        if (!image.isEmpty()) imageService.upload(image.getOriginalFilename(), image.getInputStream());
+        if (image != null && !image.isEmpty()) imageService.upload(image.getOriginalFilename(), image.getInputStream());
     }
 
 }

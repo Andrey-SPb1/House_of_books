@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS users_aud
     id         BIGINT,
     rev        INT REFERENCES revision (id),
     revtype    SMALLINT,
-    firstname  VARCHAR(64)  NOT NULL,
+    firstname  VARCHAR(64),
     lastname   VARCHAR(64),
-    email      VARCHAR(64)  NOT NULL UNIQUE,
+    email      VARCHAR(64),
     birth_date DATE,
-    password   VARCHAR(128) NOT NULL DEFAULT '{noop}123'
+    password   VARCHAR(128)
 )

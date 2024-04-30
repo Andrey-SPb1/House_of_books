@@ -53,6 +53,14 @@ public class UserService implements UserDetailsService {
                 .orElseThrow();
     }
 
+    @Transactional
+    public Optional<UserReadDto> update(Long id, UserCreateEditDto editDto) {
+        return userRepository.findById(id)
+                .map(entity -> userCreateEditMapper.map(editDto, entity))
+                .map(userRepository::saveAndFlush)
+                .map(userReadMapper::map);
+    }
+
     public List<BasketReadDto> getBasketByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(User::getBooksInBasket)
