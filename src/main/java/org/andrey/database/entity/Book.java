@@ -50,7 +50,7 @@ public class Book implements BaseEntity<Long> {
     private Integer inStock;
 
     @Builder.Default
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.PERSIST)
     private List<BookReview> reviews = new ArrayList<>();
 
 }

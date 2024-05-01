@@ -13,7 +13,6 @@ import org.andrey.validation.group.Marker;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
@@ -36,32 +35,19 @@ public class UserController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserReadDto create(@Validated @RequestBody UserCreateEditDto user) {
-        return userService.create(user);
-    }
-
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserReadDto update(@PathVariable Long id,
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserReadDto update(@AuthenticationPrincipal UserDetails userDetails,
                               @Validated({Default.class, Marker.UpdateAction.class})
                               @RequestBody
                               UserCreateEditDto user) {
-        return userService.update(id, user)
+        return userService.update(userDetails.getUsername(), user)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    // TODO: 01.05.2024 fix queries
     @PutMapping("/basket/buy")
     public ResponseEntity<String> buyBooks(@AuthenticationPrincipal UserDetails userDetails) {
         return purchaseHistoryService.addPurchaseHistoryFromBasket(userDetails.getUsername());
-    }
-
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public UserReadDto findById(@PathVariable Long id) {
-        return userService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/basket")

@@ -1,19 +1,17 @@
 package org.andrey.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.andrey.dto.create.BookCreateEditDto;
 import org.andrey.dto.read.BookReadDto;
 import org.andrey.service.BookReviewService;
 import org.andrey.service.BookService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/book")
@@ -31,19 +29,19 @@ public class BookController {
     }
 
     @PutMapping("/{id}/favorites")
-    public ResponseEntity<String> changeFavorites(@PathVariable Long id,
+    public ResponseEntity<?> changeFavorites(@PathVariable Long id,
                                                   @AuthenticationPrincipal UserDetails userDetails) {
         return bookService.changeFavorites(id, userDetails.getUsername()) ?
-                new ResponseEntity<>(HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                ok().build() :
+                internalServerError().build();
     }
 
     @PutMapping("/{id}/basket")
-    public ResponseEntity<String> changeBasket(@PathVariable Long id,
+    public ResponseEntity<?> changeBasket(@PathVariable Long id,
                                                @AuthenticationPrincipal UserDetails userDetails) {
         return bookService.changeBasket(id, userDetails.getUsername()) ?
-                new ResponseEntity<>(HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                ok().build() :
+                internalServerError().build();
     }
 
     @PostMapping("/{id}/review")
@@ -52,12 +50,5 @@ public class BookController {
                           @AuthenticationPrincipal UserDetails userDetails,
                           String review) {
         bookReviewService.addReview(id, userDetails.getUsername(), review);
-    }
-
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @ResponseStatus(HttpStatus.CREATED)
-    public BookReadDto create(@Validated BookCreateEditDto book) {
-        return bookService.create(book);
     }
 }

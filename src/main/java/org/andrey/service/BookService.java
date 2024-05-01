@@ -20,6 +20,7 @@ import org.andrey.mapper.read.BookReadMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -88,9 +89,44 @@ public class BookService {
                 .orElseThrow();
     }
 
+    @Transactional
+    public Optional<BookReadDto> updateImage(Long id, MultipartFile image) {
+        return bookRepository.findById(id)
+                .map(book -> {
+                    if(deleteImage(book.getImage())) {
+                        uploadImage(image);
+                        book.setImage(image.getOriginalFilename());
+                        bookRepository.saveAndFlush(book);
+                    }
+                    return book;
+                })
+                .map(bookReadMapper::map);
+    }
+
+    @SneakyThrows
+    private boolean deleteImage(String imageName) {
+        if(imageName != null && !imageName.isEmpty()) return imageService.delete(imageName);
+        else return false;
+    }
+
     @SneakyThrows
     private void uploadImage(MultipartFile image) {
         if (image != null && !image.isEmpty()) imageService.upload(image.getOriginalFilename(), image.getInputStream());
+    }
+
+    public Optional<byte[]> getImage(Long id) {
+        return bookRepository.findById(id)
+                .map(Book::getImage)
+                .filter(StringUtils::hasText)
+                .flatMap(imageService::get);
+    }
+
+    @Transactional
+    public Optional<BookReadDto> update(Long id, BookCreateEditDto bookDto) {
+        return bookRepository.findById(id)
+                .map(book -> bookCreateEditMapper.map(bookDto, book))
+                .map(bookRepository::saveAndFlush)
+                .map(bookReadMapper::map);
     }
 
 }

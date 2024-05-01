@@ -18,7 +18,8 @@ public class MainController {
     private final BookService bookService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BookInMainReadDto> findAllBooks(BookFilter bookFilter, Pageable pageable) {
+    public List<BookInMainReadDto> findAllBooks(BookFilter bookFilter,
+                                                Pageable pageable) {
         return bookService.findAllByFilter(bookFilter, pageable);
     }
 

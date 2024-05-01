@@ -11,8 +11,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, RevisionRepository<User, Long, Integer> {
 
-//     TODO: 26.04.2024 getBasketByEmail
-    
     Optional<User> findByEmail(String email);
     @Query(value = "select u.id from users u " +
             "where email = :email", nativeQuery = true)

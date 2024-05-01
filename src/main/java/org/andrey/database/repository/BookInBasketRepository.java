@@ -11,7 +11,6 @@ import java.util.Optional;
 @Repository
 public interface BookInBasketRepository extends JpaRepository<BookInBasket, Integer> {
 
-    // TODO: 26.04.2024 findByUser and List<BookInBasket> findBy...
     @Query("select bb from BookInBasket bb " +
             "where bb.user.id = :userId and bb.book.id = :bookId")
     Optional<BookInBasket> findByUserIdAndBookId(Long userId, Long bookId);

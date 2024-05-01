@@ -10,22 +10,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserReadMapper implements Mapper<User, UserReadDto> {
 
-    private final FavoritesReadMapper favoritesReadMapper;
-    private final BasketReadMapper basketReadMapper;
-
     @Override
     public UserReadDto map(User object) {
         return new UserReadDto(
                 object.getFirstname(),
                 object.getLastname(),
                 object.getEmail(),
-                object.getBirthDate(),
-                object.getBooksInFavorites().stream()
-                        .map(favoritesReadMapper::map)
-                        .toList(),
-                object.getBooksInBasket().stream()
-                        .map(basketReadMapper::map)
-                        .toList()
+                object.getBirthDate()
         );
     }
 }

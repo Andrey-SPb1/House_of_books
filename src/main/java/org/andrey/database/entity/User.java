@@ -39,21 +39,22 @@ public class User extends AuditingEntity<Long> {
 
     private LocalDate birthDate;
 
+    @Column(nullable = false)
     private String password;
 
     @NotAudited
     @Default
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<BookInFavorites> booksInFavorites = new ArrayList<>();
 
     @NotAudited
     @Default
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<BookInBasket> booksInBasket = new ArrayList<>();
 
     @NotAudited
     @Default
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PurchaseHistory> purchaseHistories = new ArrayList<>();
 
 }

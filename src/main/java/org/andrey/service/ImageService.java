@@ -23,8 +23,8 @@ public class ImageService {
     }
 
     @SneakyThrows
-    public void upload(String imagePath, InputStream content) {
-        Path fullImagePath = getFullImagePath(imagePath);
+    public void upload(String imageName, InputStream content) {
+        Path fullImagePath = getFullImagePath(imageName);
         try (content) {
             Files.createDirectories(fullImagePath.getParent());
             Files.write(fullImagePath, content.readAllBytes(), CREATE, TRUNCATE_EXISTING);
@@ -32,21 +32,21 @@ public class ImageService {
     }
 
     @SneakyThrows
-    public Optional<byte[]> get(String imagePath) {
-        Path fullImagePath = getFullImagePath(imagePath);
+    public Optional<byte[]> get(String imageName) {
+        Path fullImagePath = getFullImagePath(imageName);
         return Files.exists(fullImagePath) ?
                 Optional.of(Files.readAllBytes(fullImagePath)) :
                 Optional.empty();
     }
 
     @SneakyThrows
-    public boolean delete(String imagePath) {
-        Path fullImagePath = getFullImagePath(imagePath);
-        return Files.deleteIfExists(fullImagePath);
+    public boolean delete(String imageName) {
+            Path fullImagePath = getFullImagePath(imageName);
+            return Files.deleteIfExists(fullImagePath);
     }
 
-    private Path getFullImagePath(String imagePath) {
-        return Path.of(bucket, imagePath);
+    private Path getFullImagePath(String imageName) {
+        return Path.of(bucket, imageName);
     }
 
 }

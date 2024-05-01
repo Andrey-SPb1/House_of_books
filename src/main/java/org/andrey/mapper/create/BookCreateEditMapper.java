@@ -30,4 +30,19 @@ public class BookCreateEditMapper implements Mapper<BookCreateEditDto, Book> {
                         .orElse(null))
                 .build();
     }
+
+    @Override
+    public Book map(BookCreateEditDto bookDto, Book book) {
+        book.setName(bookDto.name());
+        book.setAuthor(bookDto.author());
+        book.setGenre(bookDto.genre());
+        book.setDescription(bookDto.description());
+        book.setYearOfPublish(bookDto.yearOfPublish());
+        book.setPages(bookDto.pages());
+        book.setPricePaper(bookDto.pricePaper());
+        book.setPriceDigital(bookDto.priceDigital());
+        book.setInStock(bookDto.inStock());
+
+        return book;
+    }
 }
