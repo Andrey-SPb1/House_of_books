@@ -35,6 +35,13 @@ public class UserController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    @PutMapping("/password")
+    public ResponseEntity<?> changePassword(@AuthenticationPrincipal UserDetails userDetails,
+                                            String oldPassword,
+                                            String newPassword) {
+        return userService.changePassword(userDetails.getUsername(), oldPassword, newPassword);
+    }
+
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public UserReadDto update(@AuthenticationPrincipal UserDetails userDetails,
                               @Validated({Default.class, Marker.UpdateAction.class})
@@ -46,7 +53,7 @@ public class UserController {
 
     // TODO: 01.05.2024 fix queries
     @PutMapping("/basket/buy")
-    public ResponseEntity<String> buyBooks(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> buyBooks(@AuthenticationPrincipal UserDetails userDetails) {
         return purchaseHistoryService.addPurchaseHistoryFromBasket(userDetails.getUsername());
     }
 

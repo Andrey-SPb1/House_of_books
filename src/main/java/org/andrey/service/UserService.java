@@ -13,15 +13,20 @@ import org.andrey.mapper.read.BasketReadMapper;
 import org.andrey.mapper.read.FavoritesReadMapper;
 import org.andrey.mapper.read.PurchaseHistoryReadMapper;
 import org.andrey.mapper.read.UserReadMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.http.ResponseEntity.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +38,7 @@ public class UserService implements UserDetailsService {
     private final BasketReadMapper basketReadMapper;
     private final FavoritesReadMapper favoritesReadMapper;
     private final PurchaseHistoryReadMapper purchaseHistoryReadMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public Optional<UserReadDto> findById(Long id) {
         return userRepository.findById(id)
@@ -66,6 +72,20 @@ public class UserService implements UserDetailsService {
                 .map(entity -> userCreateEditMapper.map(editDto, entity))
                 .map(userRepository::saveAndFlush)
                 .map(userReadMapper::map);
+    }
+
+    @Transactional
+    public ResponseEntity<?> changePassword(String email, String oldPassword, String newPassword) {
+        return userRepository.findByEmail(email)
+                .map(user -> {
+                    if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+                        user.setPassword(passwordEncoder.encode(newPassword));
+                        userRepository.saveAndFlush(user);
+                        return ok().build();
+                    }
+                    return new ResponseEntity<>("Old password is wrong", HttpStatus.BAD_REQUEST);
+                })
+                .orElse(notFound().build());
     }
 
     @Transactional

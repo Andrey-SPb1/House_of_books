@@ -39,4 +39,5 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
         user.setRole(userDto.role());
         return user;
     }
+
 }

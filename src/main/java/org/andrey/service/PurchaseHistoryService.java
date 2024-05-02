@@ -6,12 +6,13 @@ import org.andrey.database.repository.BookInBasketRepository;
 import org.andrey.database.repository.PurchaseHistoryRepository;
 import org.andrey.database.repository.UserRepository;
 import org.andrey.mapper.BasketToPurchaseHistoryMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static org.springframework.http.ResponseEntity.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class PurchaseHistoryService {
     private final BasketToPurchaseHistoryMapper basketToPurchaseHistoryMapper;
 
     @Transactional
-    public ResponseEntity<String> addPurchaseHistoryFromBasket(String email) {
+    public ResponseEntity<?> addPurchaseHistoryFromBasket(String email) {
         List<BookInBasket> booksInBasket = userRepository.findByEmail(email)
                 .orElseThrow()
                 .getBooksInBasket();
@@ -33,9 +34,9 @@ public class PurchaseHistoryService {
                     .map(basketToPurchaseHistoryMapper::map)
                     .toList());
             bookInBasketRepository.deleteAll(booksInBasket);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ok().build();
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return notFound().build();
         }
     }
 
