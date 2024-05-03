@@ -30,7 +30,7 @@ public class BookController {
 
     @PutMapping("/{id}/favorites")
     public ResponseEntity<?> changeFavorites(@PathVariable Long id,
-                                                  @AuthenticationPrincipal UserDetails userDetails) {
+                                             @AuthenticationPrincipal UserDetails userDetails) {
         return bookService.changeFavorites(id, userDetails.getUsername()) ?
                 ok().build() :
                 internalServerError().build();
@@ -38,7 +38,7 @@ public class BookController {
 
     @PutMapping("/{id}/basket")
     public ResponseEntity<?> changeBasket(@PathVariable Long id,
-                                               @AuthenticationPrincipal UserDetails userDetails) {
+                                          @AuthenticationPrincipal UserDetails userDetails) {
         return bookService.changeBasket(id, userDetails.getUsername()) ?
                 ok().build() :
                 internalServerError().build();

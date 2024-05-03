@@ -1,6 +1,7 @@
 INSERT INTO users(id, firstname, lastname, email, birth_date)
 VALUES (1, 'Ivan', 'Ivanov', 'ivan@gmail.com', '2000-01-01'),
-       (2, 'Maria', 'Morozova', 'maria@gmail.com', '1998-11-18');
+       (2, 'Maria', 'Morozova', 'maria@gmail.com', '1998-11-18'),
+       (3, 'test', 'test', 'test@gmail.com', '1998-11-18');
 SELECT SETVAL('users_id_seq', (SELECT max(id) FROM users));
 
 INSERT INTO books (id, name, author, genre, year_of_publish, pages, price_paper, price_digital, in_stock)

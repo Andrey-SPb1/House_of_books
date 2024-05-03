@@ -11,3 +11,4 @@ spring:
         format_sql: true
         hbm2ddl:
           auto: validate
+    open-in-view: false
