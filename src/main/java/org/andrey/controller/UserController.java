@@ -51,9 +51,8 @@ public class UserController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    // TODO: 01.05.2024 fix queries
     @PutMapping("/basket/buy")
-    public ResponseEntity<?> buyBooks(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> buyAllBooksFromBasket(@AuthenticationPrincipal UserDetails userDetails) {
         return purchaseHistoryService.addPurchaseHistoryFromBasket(userDetails.getUsername());
     }
 

@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
+@ToString
 @Table(name = "users")
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class User extends AuditingEntity<Long> {
@@ -44,17 +45,20 @@ public class User extends AuditingEntity<Long> {
 
     @NotAudited
     @Default
+    @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<BookInFavorites> booksInFavorites = new ArrayList<>();
 
     @NotAudited
     @Default
+    @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<BookInBasket> booksInBasket = new ArrayList<>();
 
     @NotAudited
     @Default
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user")
     private List<PurchaseHistory> purchaseHistories = new ArrayList<>();
 
 }

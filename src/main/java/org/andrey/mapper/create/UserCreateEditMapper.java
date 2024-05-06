@@ -36,6 +36,7 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
         user.setFirstname(userDto.firstname());
         user.setLastname(userDto.lastname());
         user.setEmail(userDto.email());
+        user.setBirthDate(userDto.birthDate());
         user.setRole(userDto.role());
         return user;
     }

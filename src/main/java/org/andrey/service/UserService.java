@@ -1,7 +1,9 @@
 package org.andrey.service;
 
 import lombok.RequiredArgsConstructor;
-import org.andrey.database.entity.User;
+import org.andrey.database.repository.BookInBasketRepository;
+import org.andrey.database.repository.BookInFavoritesRepository;
+import org.andrey.database.repository.PurchaseHistoryRepository;
 import org.andrey.database.repository.UserRepository;
 import org.andrey.dto.create.UserCreateEditDto;
 import org.andrey.dto.read.BasketReadDto;
@@ -33,6 +35,9 @@ import static org.springframework.http.ResponseEntity.*;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final BookInBasketRepository bookInBasketRepository;
+    private final BookInFavoritesRepository bookInFavoritesRepository;
+    private final PurchaseHistoryRepository purchaseHistoryRepository;
     private final UserReadMapper userReadMapper;
     private final UserCreateEditMapper userCreateEditMapper;
     private final BasketReadMapper basketReadMapper;
@@ -69,7 +74,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public Optional<UserReadDto> update(String email, UserCreateEditDto editDto) {
         return userRepository.findByEmail(email)
-                .map(entity -> userCreateEditMapper.map(editDto, entity))
+                .map(user -> userCreateEditMapper.map(editDto, user))
                 .map(userRepository::saveAndFlush)
                 .map(userReadMapper::map);
     }
@@ -100,30 +105,21 @@ public class UserService implements UserDetailsService {
     }
 
     public List<BasketReadDto> getBasketByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .map(User::getBooksInBasket)
-                .map(basket -> basket.stream()
-                        .map(basketReadMapper::map)
-                        .toList())
-                .orElse(null);
+        return bookInBasketRepository.findAllByUserEmail(email).stream()
+                .map(basketReadMapper::map)
+                .toList();
     }
 
     public List<FavoritesReadDto> getFavoritesByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .map(User::getBooksInFavorites)
-                .map(favorites -> favorites.stream()
-                        .map(favoritesReadMapper::map)
-                        .toList())
-                .orElse(null);
+        return bookInFavoritesRepository.findByUserEmail(email).stream()
+                .map(favoritesReadMapper::map)
+                .toList();
     }
 
     public List<PurchaseHistoryReadDto> getPurchaseHistoryByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .map(User::getPurchaseHistories)
-                .map(purchaseHistory -> purchaseHistory.stream()
-                        .map(purchaseHistoryReadMapper::map)
-                        .toList())
-                .orElse(null);
+        return purchaseHistoryRepository.findByUserEmail(email).stream()
+                .map(purchaseHistoryReadMapper::map)
+                .toList();
     }
 
     @Override

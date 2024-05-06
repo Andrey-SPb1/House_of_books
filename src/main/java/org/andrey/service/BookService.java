@@ -57,7 +57,7 @@ public class BookService {
                 .orElseThrow();
         int result = bookInBasketRepository.findByUserIdAndBookId(userId, bookId).isPresent() ?
                 bookInBasketRepository.deleteByUserIdAndBookId(userId, bookId) :
-                bookInBasketRepository.addByUserIdAndBookId(userId, bookId);
+                bookInBasketRepository.saveWithUserIdAndBookId(userId, bookId);
 
         return result == 1;
     }
@@ -70,7 +70,7 @@ public class BookService {
 
     public Optional<BookReadDto> findById(Long bookId, String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
-        Book book = bookRepository.findById(bookId).orElseThrow();
+        Book book = bookRepository.findByIdWithReviews(bookId).orElseThrow();
         Optional<BookInFavorites> inFavorites = bookInFavoritesRepository.findByUserIdAndBookId(user.getId(), bookId);
         Optional<BookInBasket> inBasket = bookInBasketRepository.findByUserIdAndBookId(user.getId(), bookId);
 
@@ -93,20 +93,18 @@ public class BookService {
     public Optional<BookReadDto> updateImage(Long id, MultipartFile image) {
         return bookRepository.findById(id)
                 .map(book -> {
-                    if(deleteImage(book.getImage())) {
-                        uploadImage(image);
-                        book.setImage(image.getOriginalFilename());
-                        bookRepository.saveAndFlush(book);
-                    }
+                    deleteImage(book.getImage());
+                    uploadImage(image);
+                    book.setImage(image.getOriginalFilename());
+                    bookRepository.saveAndFlush(book);
                     return book;
                 })
                 .map(bookReadMapper::map);
     }
 
     @SneakyThrows
-    private boolean deleteImage(String imageName) {
-        if(imageName != null && !imageName.isEmpty()) return imageService.delete(imageName);
-        else return false;
+    private void deleteImage(String imageName) {
+        if(imageName != null && !imageName.isEmpty()) imageService.delete(imageName);
     }
 
     @SneakyThrows

@@ -11,13 +11,13 @@ import java.time.LocalDate;
 public record UserCreateEditDto(
         @NotBlank
         String firstname,
-        @NotBlank(groups = Marker.UpdateAction.class)
         String lastname,
         @Email
         String email,
         LocalDate birthDate,
-        @NotBlank
-        @Size(min = 8)
+        @NotBlank(groups = Marker.CreateAction.class)
+        @Size(min = 8, groups = Marker.CreateAction.class)
+        @Null(groups = Marker.UpdateAction.class)
         String rawPassword,
         Role role) {
 }

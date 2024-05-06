@@ -38,7 +38,9 @@ public class AdminController {
 
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public UserReadDto createUser(@Validated @RequestBody UserCreateEditDto user) {
+    public UserReadDto createUser(@Validated({Default.class, Marker.CreateAction.class})
+                                  @RequestBody
+                                  UserCreateEditDto user) {
         return userService.create(user);
     }
 
@@ -58,13 +60,13 @@ public class AdminController {
 
     @PostMapping(value = "/books", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public BookReadDto createBook(@Validated BookCreateEditDto book) {
+    public BookReadDto createBook(@Validated({Default.class, Marker.CreateAction.class}) BookCreateEditDto book) {
         return bookService.create(book);
     }
 
     @PutMapping(value = "/books/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BookReadDto updateBook(@PathVariable Long id,
-                                  @Validated
+                                  @Validated({Default.class, Marker.UpdateAction.class})
                                   @RequestBody
                                   BookCreateEditDto book) {
         return bookService.update(id, book)
