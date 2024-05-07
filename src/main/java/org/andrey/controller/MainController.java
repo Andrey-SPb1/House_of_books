@@ -22,5 +22,4 @@ public class MainController {
                                                 Pageable pageable) {
         return bookService.findAllByFilter(bookFilter, pageable);
     }
-
 }
