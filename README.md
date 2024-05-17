@@ -1,5 +1,5 @@
 # Веб-приложение для выбора и покупки книг
-[![Typing SVG](https://readme-typing-svg.herokuapp.com?color=%2336BCF7&lines=House+of+Book)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?color=%2336BCF7&lines=House+of+Books)](https://git.io/typing-svg)
 
 В проекте представлена серверная часть сайта **Дом книг**, где представлены все книги из ассортимента магазина с 
 описанием, ценой на цифровую и бумажную версию, количество в наличии и т.п.
